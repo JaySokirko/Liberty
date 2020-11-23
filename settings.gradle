@@ -1,0 +1,3 @@
+include ':liberty'
+include ':app'
+rootProject.name = "PermissionsTests"
