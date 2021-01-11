@@ -1,91 +1,121 @@
 package com.sokyrko.internal
 
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.sokyrko.internal.AnnotationProcessor.getMethodsAnnotatedWith
 import com.sokyrko.liberty.Permission
 import com.sokyrko.liberty.annotation.OnAllowed
 import com.sokyrko.liberty.annotation.OnDenied
 import com.sokyrko.liberty.annotation.OnNeverAskAgain
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.lang.reflect.Method
 
 internal object Core {
 
-    private var context: Activity? = null
+    private var context: Any? = null
         get() {
-            field.checkNotNull()
+            field ?: throw NullPointerException("call Liberty.init(activity) or " +
+                    "Liberty.init(fragment) before use the library")
             return field
         }
 
-    fun init(context: Activity) {
-        this.context = context
+    fun init(activity: Activity) {
+        this.context = activity
+    }
+
+    fun init(fragment: Fragment) {
+        this.context = fragment
     }
 
     fun isHavePermission(permission: String): Boolean {
-        val check: Int = ContextCompat.checkSelfPermission(context!!, permission)
-        return check == PERMISSION_GRANTED
+//        val check: Int = ContextCompat.checkSelfPermission(context!!, permission)
+//        return check == PERMISSION_GRANTED
+        return false
     }
 
     fun isHavePermissions(vararg permissions: String): List<Permission> {
         val resultList: MutableList<Permission> = mutableListOf()
 
-        permissions.forEach { permission ->
-            val check: Int = ContextCompat.checkSelfPermission(context!!, permission)
-            resultList.add(Permission(name = permission, isGranted = check == PERMISSION_GRANTED))
-        }
+//        permissions.forEach { permission ->
+//            val check: Int = ContextCompat.checkSelfPermission(context!!, permission)
+//            resultList.add(Permission(name = permission, isGranted = check == PERMISSION_GRANTED))
+//        }
 
         return resultList
     }
 
     fun requestPermission(permission: String, requestCode: Int) {
-        requestPermissions(context!!, arrayOf(permission), requestCode)
+        when(context) {
+            is Activity -> {
+                requestPermissions(context as Activity, arrayOf(permission), requestCode)
+            }
+            is Fragment -> {
+                (context as Fragment).requestPermissions(arrayOf(permission), requestCode)
+            }
+        }
     }
 
-    fun requestPermissions(vararg permissions: Permission) {
-        permissions.forEach { permission: Permission ->
-            requestPermission(permission.name, permission.requestCode)
+    fun requestPermissions(vararg permissions: String, requestCode: Int) {
+        when(context) {
+            is Activity -> {
+                requestPermissions(context as Activity, permissions, requestCode)
+            }
+            is Fragment -> {
+                (context as Fragment).requestPermissions(permissions, requestCode)
+            }
         }
     }
 
     fun onRequestPermissionsResult(
-        activity: Activity,
         receiver: Any,
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray) {
 
-        val onDenied: List<Method> = getMethodsAnnotatedWith(receiver, OnDenied::class.java)
-        val onNeverAskAgain: List<Method> = getMethodsAnnotatedWith(receiver, OnNeverAskAgain::class.java)
-        val onAllowed: List<Method> = getMethodsAnnotatedWith(receiver, OnAllowed::class.java)
+        val onDenied: Method =
+            getMethodsAnnotatedWith(receiver, OnDenied::class.java).first {
+                it.getAnnotation(OnDenied::class.java)?.permissionRequestCode == requestCode
+            }
 
-        permissions.forEachIndexed { index: Int, permission ->
+        val onNeverAskAgain: Method =
+            getMethodsAnnotatedWith(receiver, OnNeverAskAgain::class.java).first {
+                it.getAnnotation(OnNeverAskAgain::class.java)?.permissionRequestCode == requestCode
+            }
+
+        val onAllowed: Method =
+            getMethodsAnnotatedWith(receiver, OnAllowed::class.java).first {
+                it.getAnnotation(OnAllowed::class.java)?.permissionRequestCode == requestCode
+            }
+
+        permissions.forEachIndexed { index: Int, permission: String ->
 
             if (grantResults[index] == PackageManager.PERMISSION_DENIED) {
 
-                if (activity.shouldShowRequestPermissionRationale(permissions[index])) {
-
-                    onDenied.filter {
-                        it.getAnnotation(OnDenied::class.java)?.permissionRequestCode == requestCode
-                    }.forEach { it.invoke(receiver) }
-
+                if (shouldShowRequestPermissionRationale(context!!, permission = permission)) {
+                    AnnotationProcessor.handlePermissions(onDenied, permission, receiver)
                 } else {
-                    onNeverAskAgain.filter {
-                        it.getAnnotation(OnNeverAskAgain::class.java)?.permissionRequestCode == requestCode
-                    }.forEach { it.invoke(receiver) }
+                    AnnotationProcessor.handlePermissions(onNeverAskAgain, permission, receiver)
                 }
             }
             else if (grantResults[index] == PERMISSION_GRANTED) {
-                onAllowed.filter {
-                    it.getAnnotation(OnAllowed::class.java)?.permissionRequestCode == requestCode
-                }.forEach { it.invoke(receiver) }
+                AnnotationProcessor.handlePermissions(onAllowed, permission, receiver)
             }
         }
     }
 
     fun clear() {
         context = null
+    }
+
+    private fun shouldShowRequestPermissionRationale(context: Any, permission: String): Boolean {
+        if (context is Activity) return context.shouldShowRequestPermissionRationale(permission)
+        if (context is Fragment) return context.shouldShowRequestPermissionRationale(permission)
+        else throw IllegalArgumentException("context does not activity or fragment")
     }
 }

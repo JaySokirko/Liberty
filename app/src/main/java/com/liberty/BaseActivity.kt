@@ -1,4 +1,4 @@
-package com.permissionstests
+package com.liberty
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -6,11 +6,9 @@ import com.sokyrko.liberty.Liberty
 
 abstract class BaseActivity : AppCompatActivity() {
 
-    val permissionsHandler = PermissionsHandler()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Liberty.init(activity = this)
+//        Liberty.init(activity = this)
     }
 
     override fun onRequestPermissionsResult(
@@ -19,7 +17,7 @@ abstract class BaseActivity : AppCompatActivity() {
         grantResults: IntArray) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Liberty.onRequestPermissionsResult(this, permissionsHandler, requestCode, permissions, grantResults)
+//        Liberty.onRequestPermissionsResult(this, this, requestCode, permissions, grantResults)
     }
 
     override fun onDestroy() {

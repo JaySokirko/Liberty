@@ -1,6 +1,9 @@
 package com.sokyrko.internal
 
+import com.sokyrko.liberty.annotation.PermissionName
 import java.lang.reflect.Method
+import kotlin.reflect.KParameter
+import kotlin.reflect.jvm.kotlinFunction
 
 internal object AnnotationProcessor {
 
@@ -16,4 +19,20 @@ internal object AnnotationProcessor {
 
         return methods
     }
+
+    fun handlePermissions(method: Method, permission: String, receiver: Any) {
+        if (method.getArgumentsCount() == 1) {
+            method.invoke(receiver)
+        } else {
+            method.getArguments()?.forEach { methodParameter: KParameter ->
+                if (methodParameter.annotations.filterIsInstance<PermissionName>().isNotEmpty()) {
+                    method.invoke(receiver, permission)
+                }
+            }
+        }
+    }
+
+    fun Method.getArguments(): List<KParameter>? = kotlinFunction?.parameters
+
+    fun Method.getArgumentsCount(): Int = kotlinFunction?.parameters?.size ?: 0
 }

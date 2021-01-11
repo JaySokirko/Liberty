@@ -1,24 +1,18 @@
 package com.sokyrko.liberty
 
 import android.app.Activity
-import android.content.Context
-import android.content.pm.PackageManager.PERMISSION_DENIED
-import android.content.pm.PackageManager.PERMISSION_GRANTED
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.content.ContextCompat
-import com.sokyrko.internal.AnnotationProcessor
-import com.sokyrko.internal.AnnotationProcessor.getMethodsAnnotatedWith
+import androidx.fragment.app.Fragment
 import com.sokyrko.internal.Core
-import com.sokyrko.liberty.annotation.OnAllowed
-import com.sokyrko.liberty.annotation.OnDenied
-import com.sokyrko.liberty.annotation.OnNeverAskAgain
-import java.lang.reflect.Method
 
 
 object Liberty {
 
     fun init(activity: Activity) {
         Core.init(activity)
+    }
+
+    fun init(fragment: Fragment) {
+        Core.init(fragment)
     }
 
     fun isHavePermission(permission: String, result: (Boolean) -> Unit) {
@@ -33,22 +27,17 @@ object Liberty {
         Core.requestPermission(permission, requestCode)
     }
 
-    fun requestPermissions(vararg permissions: Permission){
-        Core.requestPermissions(*permissions)
+    fun requestPermissions(vararg permissions: String, requestCode: Int){
+        Core.requestPermissions(*permissions, requestCode = requestCode)
     }
 
     fun onRequestPermissionsResult(
-        activity: Activity,
         receiver: Any,
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray) {
 
-        Core.onRequestPermissionsResult(activity, receiver, requestCode, permissions, grantResults)
-    }
-
-    fun permission(name: String, requestCode: Int): Permission {
-        return Permission(name = name, requestCode =  requestCode)
+        Core.onRequestPermissionsResult(receiver, requestCode, permissions, grantResults)
     }
 
     fun clear() {

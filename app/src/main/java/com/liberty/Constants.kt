@@ -1,0 +1,10 @@
+package com.liberty
+
+object Constants {
+
+    const val REQUEST_CAMERA_PERMISSION = 100
+    const val REQUEST_READ_EXTERNAL_STORAGE_PERMISSION = 101
+    const val REQUEST_CAMERA_AND_STORAGE_PERMISSIONS = 102
+    const val REQUEST_READ_CALENDAR = 103
+    const val REQUEST_READ_CONTACTS = 104
+}

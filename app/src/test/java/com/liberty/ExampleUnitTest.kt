@@ -1,4 +1,4 @@
-package com.permissionstests
+package com.liberty
 
 import org.junit.Test
 
