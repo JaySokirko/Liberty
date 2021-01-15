@@ -34,18 +34,27 @@ internal object Core {
     }
 
     fun isHavePermission(permission: String): Boolean {
-//        val check: Int = ContextCompat.checkSelfPermission(context!!, permission)
-//        return check == PERMISSION_GRANTED
-        return false
+        return when(context) {
+            is Activity -> {
+                val check: Int = ContextCompat.checkSelfPermission((context as Activity), permission)
+                check == PERMISSION_GRANTED
+            }
+            is Fragment -> {
+                val check: Int = ContextCompat.checkSelfPermission(((context as Fragment).requireContext()), permission)
+                check == PERMISSION_GRANTED
+            }
+            else -> {
+                throw IllegalArgumentException("context does not activity or fragment")
+            }
+        }
     }
 
     fun isHavePermissions(vararg permissions: String): List<Permission> {
         val resultList: MutableList<Permission> = mutableListOf()
 
-//        permissions.forEach { permission ->
-//            val check: Int = ContextCompat.checkSelfPermission(context!!, permission)
-//            resultList.add(Permission(name = permission, isGranted = check == PERMISSION_GRANTED))
-//        }
+        permissions.forEach { permission ->
+            resultList.add(Permission(name = permission, isGranted = isHavePermission(permission)))
+        }
 
         return resultList
     }

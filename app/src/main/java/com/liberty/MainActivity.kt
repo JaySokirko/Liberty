@@ -14,4 +14,11 @@ class MainActivity : BaseActivity() {
             .add(R.id.fragment_container, ReflectionPermissionsFragment())
             .commit()
     }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 }

@@ -2,12 +2,14 @@ package com.liberty
 
 import android.Manifest.permission.*
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import com.liberty.Constants.REQUEST_CAMERA_AND_STORAGE_PERMISSIONS
 import com.liberty.Constants.REQUEST_READ_CALENDAR
 import com.liberty.Constants.REQUEST_READ_CONTACTS
@@ -52,6 +54,14 @@ class ReflectionPermissionsFragment : Fragment() {
         onPermissionsBtnClick()
         onReadContactsBtnClick()
         onReadCalendarsBtnClick()
+
+        Liberty.isHavePermission(READ_EXTERNAL_STORAGE) {
+            Log.d("TAG", "onViewCreated: ")
+        }
+
+        Liberty.isHavePermissions(READ_EXTERNAL_STORAGE, CAMERA) {
+            Log.d("TAG", "onViewCreated: ")
+        }
     }
 
     override fun onRequestPermissionsResult(
