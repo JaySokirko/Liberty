@@ -1,3 +1,5 @@
+include ':emptymodule'
+include ':libertytest'
 include ':liberty'
-include ':app'
-rootProject.name = "PermissionsTests"
+
+rootProject.name = "Liberty"
