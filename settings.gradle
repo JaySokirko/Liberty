@@ -1,5 +1,4 @@
-include ':emptymodule'
-include ':libertytest'
+include ':app'
 include ':liberty'
 
 rootProject.name = "Liberty"
