@@ -1,4 +1,3 @@
-include ':emptymodule'
 include ':app'
 include ':liberty'
 
