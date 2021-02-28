@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Result"
-        android:textSize="21sp"
+        android:textSize="21dp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/single_permission_request_btn"
         app:layout_constraintStart_toStartOf="@+id/single_permission_request_btn"
@@ -47,7 +47,7 @@
         android:layout_marginTop="20dp"
         android:text="Camera:"
         android:textColor="@color/black"
-        android:textSize="21sp"
+        android:textSize="21dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scope_permissions_request_btn" />
@@ -60,7 +60,7 @@
         android:layout_marginTop="20dp"
         android:text="Storage:"
         android:textColor="@color/black"
-        android:textSize="21sp"
+        android:textSize="21dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/camera_result_text_view" />
@@ -73,7 +73,7 @@
         android:layout_marginTop="20dp"
         android:text="SMS:"
         android:textColor="@color/black"
-        android:textSize="21sp"
+        android:textSize="21dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/external_storage_result_text_view" />
