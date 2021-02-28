@@ -8,8 +8,6 @@ import kotlin.reflect.jvm.kotlinFunction
 
 internal object AnnotationProcessor {
 
-    private const val TAG = "Liberty error: "
-
     fun getMethodsAnnotatedWith(receiver: Any, annotation: Class<out Annotation>): List<Method> {
         val methods: MutableList<Method> = mutableListOf()
 
@@ -28,7 +26,11 @@ internal object AnnotationProcessor {
         try {
             method.invoke(receiver)
         } catch (e: Exception) {
-            e.printStackTrace()
+            if (e is IllegalArgumentException) {
+                Log.e(TAG, "A method ${method.name} should not have any arguments.")
+            } else {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -38,8 +40,7 @@ internal object AnnotationProcessor {
             method.invoke(receiver, argument)
         } catch (e: Exception) {
             if (e is IllegalArgumentException) {
-                Log.e(TAG, "A method annotated with @OnPermissionsRequestResult should have only" +
-                        " one argument with type List<Permission>. Detailed error message: ${e.message}")
+                Log.e(TAG, "A method ${method.name} should have only one argument with type List<Permission>.")
             } else {
                 e.printStackTrace()
             }
