@@ -1,5 +1,7 @@
 # Liberty
  
+  # Basic 2 #
+ 
 This library helps to manage runtime permissions handling. 
   
 ![](record_1.gif)
@@ -50,5 +52,9 @@ And in the final step, you should define functions that will handle results:
 ```
 Functions names do not matter, but they should be without any arguments.
 After permission request, the library will trigger a certain method, depends on the result.
-For instance, if the user has allowed the requested permission function annotated @OnAllowed will be called.
+For instance, if the user has allowed the requested permission, function annotated @OnAllowed will be called.
+
+<br/>
+
+
 
