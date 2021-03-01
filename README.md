@@ -74,6 +74,30 @@ Liberty in your fragment, you can don't care about clearing resources, cuz the l
 
 <br/>
 
+## Scoped permissions request ##
+It often needs to request several permissions in a time.
+To do this just call:
+```kotlin
+Liberty.requestPermissions(
+                CAMERA,
+                READ_EXTERNAL_STORAGE,
+                READ_SMS,
+                requestCode = YOUR_REQUEST_CODE)
+```
+
+And you need to define a function which will receive a result:
+```kotlin
+@OnPermissionsRequestResult(YOUR_REQUEST_CODE)
+fun onContactsAndCamera(result: MutableList<Permission>) {
+  //Handle permissions request result
+}
+```
+
+The function name doesn't matter but should receives
+only one argument with type MutableList<Permission>
+
+<br/>
+
 ## Custom receivers ## 
 Let's assume you want to receive permissions request results in your ViewModel class.
 To do this you just need to pass your ViewModel class instance as the receiver in onRequestPermissionsResult():
