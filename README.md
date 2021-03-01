@@ -16,7 +16,7 @@ Liberty.init(fragment = this)
 
 Call this code to request permission, for instance, android.Manifest.permission.READ_CONTACTS
 ```kotlin
-Liberty.requestPermission(permission = android.Manifest.permission.READ_CONTACTS, requestCode = REQUEST_READ_CONTACTS)
+Liberty.requestPermission(permission = android.Manifest.permission.READ_CONTACTS, requestCode = YOUR_REQUEST_CODE)
 ```
 
 <br/>
@@ -36,17 +36,17 @@ In the current case, it is an instance of your activity or fragment.
 
 And in the final step, you should define functions that will handle results:
 ```kotlin
-    @OnAllowed(REQUEST_READ_CONTACTS)
+    @OnAllowed(YOUR_REQUEST_CODE)
     fun onContactsAllowed() {
         //Permission allowed
     }
     
-    @OnDenied(REQUEST_READ_CONTACTS)
+    @OnDenied(YOUR_REQUEST_CODE)
     fun onContactsDenied() {
         //Permission denied
     }
     
-    @OnNeverAskAgain(REQUEST_READ_CONTACTS)
+    @OnNeverAskAgain(YOUR_REQUEST_CODE)
     fun onContactsNeverAskAgain() {
         //The user has clicked "don't ask again"
     }
@@ -58,7 +58,7 @@ For instance, if the user has allowed the requested permission, function annotat
 <br/>
 
 ## Warning ##
-If you've initialized the library in an activity that extends from Activity, 
+If you've initialized the library in an activity that extends from Activity(), 
 you should manually call Liberty.clear() in the onDestroy(): 
 ```kotlin
 class MainActivity : Activity() {
@@ -71,4 +71,23 @@ class MainActivity : Activity() {
 ```
 In case, if your activity extends AppCompatActivity() or you've initialized 
 Liberty in your fragment, you can don't care about clearing resources, cuz the library handles this automatically.
+
+<br/>
+
+## Custom receivers ## 
+Let's assume you want to receive permissions request results in your ViewModel class.
+To do this you just need to pass your ViewModel class instance as the receiver in onRequestPermissionsResult():
+```kotlin
+Liberty.onRequestPermissionsResult(receiver = yourViewModel, requestCode, permissions, grantResults)
+```
+And, accordingly, in the ViewModel class define functions which receive results:
+```kotlin
+    @OnAllowed(YOUR_REQUEST_CODE)
+    fun onPermissionAllowed() {
+        //Permission allowed
+    }
+```
+
+
+
 
