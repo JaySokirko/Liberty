@@ -9,11 +9,10 @@ Firstly, initialize the library. You can do this in your activity or fragment:
 Liberty.init(activity = this)
 Liberty.init(fragment = this)
  ```
+<br/>
 
-
-
-To request permission just call this code:
+Call this code to request some permission:
 ```kotlin
-Liberty.requestPermission(permission = READ_CONTACTS, requestCode = REQUEST_READ_CONTACTS)
+Liberty.requestPermission(permission = yourPermissionName, requestCode = 100)
 ```
 
