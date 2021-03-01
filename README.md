@@ -1,6 +1,8 @@
 # Liberty
- 
-  # Basic 2 #
+
+<br/>
+
+## Basic concepts ##
  
 This library helps to manage runtime permissions handling. 
   
