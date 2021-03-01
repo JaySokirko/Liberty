@@ -57,5 +57,18 @@ For instance, if the user has allowed the requested permission, function annotat
 
 <br/>
 
+## Warning ##
+If you've initialized the library in an activity that extends from Activity, 
+you should manually call Liberty.clear() in the onDestroy(): 
+```kotlin
+class MainActivity : Activity() {
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Liberty.clear()
+    }
+}
+```
+In case, if your activity extends AppCompatActivity() or you've initialized 
+Liberty in your fragment, you can don't care about clearing resources, cuz the library handles this automatically.
 
