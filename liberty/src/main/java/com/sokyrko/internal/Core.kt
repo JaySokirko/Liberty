@@ -1,23 +1,28 @@
 package com.sokyrko.internal
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.sokyrko.internal.AnnotationProcessor.getMethodsAnnotatedWith
-import com.sokyrko.liberty.Permission
-import com.sokyrko.liberty.RequestResult
+import com.sokyrko.liberty.Liberty
+import com.sokyrko.liberty.Liberty.Permission
+import com.sokyrko.liberty.Liberty.RequestResult
 import com.sokyrko.liberty.annotation.OnAllowed
 import com.sokyrko.liberty.annotation.OnDenied
 import com.sokyrko.liberty.annotation.OnNeverAskAgain
 import com.sokyrko.liberty.annotation.OnPermissionsRequestResult
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
 import java.lang.reflect.Method
 
 internal object Core {
+
+    private val lifecycleObserver = LifecycleObserver()
 
     private var context: Any? = null
         get() {
@@ -26,12 +31,24 @@ internal object Core {
             return field
         }
 
+    @SuppressLint("RestrictedApi")
     fun init(activity: Activity) {
         this.context = activity
+
+        if (activity is ComponentActivity) {
+            activity.lifecycle.addObserver(lifecycleObserver)
+        } else {
+            Log.e(TAG, "Looks like your activity ${activity.localClassName} inherits " +
+                    "from ${Activity::class.java} instead of " +
+                    "${AppCompatActivity::class.java}. To avoid memory leaks you should call " +
+                    "Liberty.clear() in the onDestroy() method or extend your activity from " +
+                    "${AppCompatActivity::class.java} instead of ${Activity::class.java}")
+        }
     }
 
     fun init(fragment: Fragment) {
         this.context = fragment
+        fragment.lifecycle.addObserver(lifecycleObserver)
     }
 
     fun isHavePermission(permission: String): Boolean {

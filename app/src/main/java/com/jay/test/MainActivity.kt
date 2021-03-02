@@ -1,15 +1,17 @@
 package com.jay.test
 
 import android.Manifest.permission.*
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.sokyrko.liberty.Liberty.Permission
+import com.sokyrko.liberty.Liberty.RequestResult
 import com.sokyrko.liberty.Liberty
-import com.sokyrko.liberty.Permission
-import com.sokyrko.liberty.RequestResult
 import com.sokyrko.liberty.annotation.OnAllowed
 import com.sokyrko.liberty.annotation.OnDenied
 import com.sokyrko.liberty.annotation.OnNeverAskAgain
@@ -28,8 +30,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Liberty.init(activity = this)
-
         requestReadContactsBtn = findViewById(R.id.single_permission_request_btn)
         readContactsResultTextView = findViewById(R.id.single_permission_request_text_view)
         requestScopePermissionsBtn = findViewById(R.id.scope_permissions_request_btn)
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         smsResultTextView = findViewById(R.id.read_sms_result_text_view)
 
         requestReadContactsBtn.setOnClickListener {
-            Liberty.requestPermission(READ_CONTACTS, REQUEST_READ_CONTACTS)
+            Liberty.requestPermission(permission = READ_CONTACTS, requestCode =  REQUEST_READ_CONTACTS)
         }
 
         requestScopePermissionsBtn.setOnClickListener {
@@ -48,6 +48,10 @@ class MainActivity : AppCompatActivity() {
                 READ_SMS,
                 requestCode = REQUEST_SCOPE_PERMISSIONS)
         }
+
+        findViewById<Button>(R.id.start_fragments_activity).setOnClickListener {
+            startActivity(Intent(this, FragmentsActivity::class.java))
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -56,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Liberty.onRequestPermissionsResult(this, requestCode, permissions, grantResults)
+        Liberty.onRequestPermissionsResult(receiver = this, requestCode, permissions, grantResults)
     }
 
     @OnAllowed(REQUEST_READ_CONTACTS)
@@ -135,11 +139,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    companion object {
-        const val TAG = "TAG"
-        const val REQUEST_READ_CONTACTS = 100
-        const val REQUEST_SCOPE_PERMISSIONS = 200
     }
 }
