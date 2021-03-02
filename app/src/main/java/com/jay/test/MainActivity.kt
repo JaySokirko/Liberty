@@ -17,7 +17,7 @@ import com.sokyrko.liberty.annotation.OnDenied
 import com.sokyrko.liberty.annotation.OnNeverAskAgain
 import com.sokyrko.liberty.annotation.OnPermissionsRequestResult
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var requestReadContactsBtn: Button
     private lateinit var readContactsResultTextView: TextView
@@ -29,8 +29,6 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        Liberty.init(activity = this)
 
         requestReadContactsBtn = findViewById(R.id.single_permission_request_btn)
         readContactsResultTextView = findViewById(R.id.single_permission_request_text_view)

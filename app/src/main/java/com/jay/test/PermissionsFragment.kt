@@ -22,6 +22,12 @@ class PermissionsFragment: Fragment() {
 
     private val permissionResultReceiver = PermissionsResultReceiver()
 
+    private val dialog: CustomDialog = CustomDialog().apply {
+        title = "Dialog title"
+        message = "Explain why your dialog requires permissions"
+        positiveBtnText = "Settings"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,12 +51,9 @@ class PermissionsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray) {
-
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         Liberty.onRequestPermissionsResult(receiver = permissionResultReceiver, requestCode, permissions, grantResults)
     }
 
