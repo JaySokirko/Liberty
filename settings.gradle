@@ -1,3 +1,4 @@
-include ':liberty'
 include ':app'
-rootProject.name = "PermissionsTests"
+include ':liberty'
+
+rootProject.name = "Liberty"

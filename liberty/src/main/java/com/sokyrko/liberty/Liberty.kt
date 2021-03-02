@@ -43,4 +43,12 @@ object Liberty {
     fun clear() {
         Core.clear()
     }
+
+    class Permission(val name: String, val result: RequestResult)
+
+    enum class RequestResult {
+        ALLOWED,
+        DENIED,
+        NEVER_ASK_AGAIN
+    }
 }

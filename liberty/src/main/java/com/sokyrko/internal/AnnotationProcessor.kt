@@ -1,6 +1,7 @@
 package com.sokyrko.internal
 
-import com.sokyrko.liberty.annotation.PermissionName
+import android.util.Log
+import com.sokyrko.liberty.annotation.OnPermissionsRequestResult
 import java.lang.reflect.Method
 import kotlin.reflect.KParameter
 import kotlin.reflect.jvm.kotlinFunction
@@ -20,14 +21,28 @@ internal object AnnotationProcessor {
         return methods
     }
 
-    fun handlePermissions(method: Method, permission: String, receiver: Any) {
-        if (method.getArgumentsCount() == 1) {
+    fun invokeMethod(method: Method?, receiver: Any) {
+        method ?: return
+        try {
             method.invoke(receiver)
-        } else {
-            method.getArguments()?.forEach { methodParameter: KParameter ->
-                if (methodParameter.annotations.filterIsInstance<PermissionName>().isNotEmpty()) {
-                    method.invoke(receiver, permission)
-                }
+        } catch (e: Exception) {
+            if (e is IllegalArgumentException) {
+                Log.e(TAG, "A method ${method.name} should not have any arguments.")
+            } else {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun invokeMethod(method: Method?, receiver: Any, argument: Any) {
+        method ?: return
+        try {
+            method.invoke(receiver, argument)
+        } catch (e: Exception) {
+            if (e is IllegalArgumentException) {
+                Log.e(TAG, "A method ${method.name} should have only one argument with type List<Permission>.")
+            } else {
+                e.printStackTrace()
             }
         }
     }

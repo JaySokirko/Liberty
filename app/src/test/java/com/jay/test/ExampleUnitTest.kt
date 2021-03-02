@@ -1,4 +1,4 @@
-package com.liberty
+package com.jay.test
 
 import org.junit.Test
 

@@ -1,22 +1,28 @@
 package com.sokyrko.internal
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.sokyrko.internal.AnnotationProcessor.getMethodsAnnotatedWith
-import com.sokyrko.liberty.Permission
+import com.sokyrko.liberty.Liberty
+import com.sokyrko.liberty.Liberty.Permission
+import com.sokyrko.liberty.Liberty.RequestResult
 import com.sokyrko.liberty.annotation.OnAllowed
 import com.sokyrko.liberty.annotation.OnDenied
 import com.sokyrko.liberty.annotation.OnNeverAskAgain
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
+import com.sokyrko.liberty.annotation.OnPermissionsRequestResult
 import java.lang.reflect.Method
 
 internal object Core {
+
+    private val lifecycleObserver = LifecycleObserver()
 
     private var context: Any? = null
         get() {
@@ -25,12 +31,24 @@ internal object Core {
             return field
         }
 
+    @SuppressLint("RestrictedApi")
     fun init(activity: Activity) {
         this.context = activity
+
+        if (activity is ComponentActivity) {
+            activity.lifecycle.addObserver(lifecycleObserver)
+        } else {
+            Log.e(TAG, "Looks like your activity ${activity.localClassName} inherits " +
+                    "from ${Activity::class.java} instead of " +
+                    "${AppCompatActivity::class.java}. To avoid memory leaks you should call " +
+                    "Liberty.clear() in the onDestroy() method or extend your activity from " +
+                    "${AppCompatActivity::class.java} instead of ${Activity::class.java}")
+        }
     }
 
     fun init(fragment: Fragment) {
         this.context = fragment
+        fragment.lifecycle.addObserver(lifecycleObserver)
     }
 
     fun isHavePermission(permission: String): Boolean {
@@ -52,9 +70,9 @@ internal object Core {
     fun isHavePermissions(vararg permissions: String): List<Permission> {
         val resultList: MutableList<Permission> = mutableListOf()
 
-        permissions.forEach { permission ->
-            resultList.add(Permission(name = permission, isGranted = isHavePermission(permission)))
-        }
+//        permissions.forEach { permission ->
+//            resultList.add(Permission(name = permission, isGranted = isHavePermission(permission)))
+//        }
 
         return resultList
     }
@@ -87,34 +105,56 @@ internal object Core {
         permissions: Array<out String>,
         grantResults: IntArray) {
 
-        val onDenied: Method =
-            getMethodsAnnotatedWith(receiver, OnDenied::class.java).first {
-                it.getAnnotation(OnDenied::class.java)?.permissionRequestCode == requestCode
-            }
+        if (permissions.count() == 1) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
 
-        val onNeverAskAgain: Method =
-            getMethodsAnnotatedWith(receiver, OnNeverAskAgain::class.java).first {
-                it.getAnnotation(OnNeverAskAgain::class.java)?.permissionRequestCode == requestCode
-            }
-
-        val onAllowed: Method =
-            getMethodsAnnotatedWith(receiver, OnAllowed::class.java).first {
-                it.getAnnotation(OnAllowed::class.java)?.permissionRequestCode == requestCode
-            }
-
-        permissions.forEachIndexed { index: Int, permission: String ->
-
-            if (grantResults[index] == PackageManager.PERMISSION_DENIED) {
-
-                if (shouldShowRequestPermissionRationale(context!!, permission = permission)) {
-                    AnnotationProcessor.handlePermissions(onDenied, permission, receiver)
-                } else {
-                    AnnotationProcessor.handlePermissions(onNeverAskAgain, permission, receiver)
+                if (shouldShowRequestPermissionRationale(context!!, permission = permissions[0])) {
+                    val onDenied: Method? =
+                        getMethodsAnnotatedWith(receiver, OnDenied::class.java).firstOrNull {
+                            it.getAnnotation(OnDenied::class.java)?.requestCode == requestCode
+                        }
+                    AnnotationProcessor.invokeMethod(onDenied, receiver)
+                }
+                else {
+                    val onNeverAskAgain: Method? =
+                        getMethodsAnnotatedWith(receiver, OnNeverAskAgain::class.java).firstOrNull {
+                            it.getAnnotation(OnNeverAskAgain::class.java)?.requestCode == requestCode
+                        }
+                    AnnotationProcessor.invokeMethod(onNeverAskAgain, receiver)
                 }
             }
-            else if (grantResults[index] == PERMISSION_GRANTED) {
-                AnnotationProcessor.handlePermissions(onAllowed, permission, receiver)
+
+            else if (grantResults[0] == PERMISSION_GRANTED) {
+                val onAllowed: Method? =
+                    getMethodsAnnotatedWith(receiver, OnAllowed::class.java).firstOrNull {
+                        it.getAnnotation(OnAllowed::class.java)?.requestCode == requestCode
+                    }
+                AnnotationProcessor.invokeMethod(onAllowed, receiver)
             }
+        } else {
+            val permissionsResultList: MutableList<Permission> = mutableListOf()
+
+            permissions.forEachIndexed { index: Int, permission: String ->
+                if (grantResults[index] == PackageManager.PERMISSION_DENIED) {
+
+                    if (shouldShowRequestPermissionRationale(context!!, permission = permissions[index])) {
+                        permissionsResultList.add(Permission(permission, RequestResult.DENIED))
+                    }
+                    else {
+                        permissionsResultList.add(Permission(permission, RequestResult.NEVER_ASK_AGAIN))
+                    }
+                }
+                else if (grantResults[index] == PERMISSION_GRANTED) {
+                    permissionsResultList.add(Permission(permission, RequestResult.ALLOWED))
+                }
+            }
+
+            val method: Method? =
+                getMethodsAnnotatedWith(receiver, OnPermissionsRequestResult::class.java).firstOrNull {
+                    it.getAnnotation(OnPermissionsRequestResult::class.java)?.requestCode == requestCode
+                }
+
+            AnnotationProcessor.invokeMethod(method, receiver, permissionsResultList)
         }
     }
 
