@@ -118,10 +118,7 @@ And, accordingly, in the ViewModel class define functions which receive results:
 
 ## Additionally ##
 
-```kotlin
-Permission 
-```
-class contains two fields:
+```koltin Permission ``` class contains two fields:
 
 
 
