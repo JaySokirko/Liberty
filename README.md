@@ -75,7 +75,9 @@ Liberty in your fragment, you can don't care about clearing resources, cuz the l
 
 ## Scoped permissions request ##
 It often needs to request several permissions in a time.
-![](record_1.gif)
+<br/>
+![](record_2.gif)
+<br/>
 To do this just call:
 ```kotlin
 Liberty.requestPermissions(
