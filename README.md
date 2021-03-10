@@ -114,6 +114,11 @@ And, accordingly, in the ViewModel class define functions which receive results:
     }
 ```
 
+<br/>
+
+## Docunebtation ##
+
+```@OnAllowed(val requestCode: Int)```
 
 
 
