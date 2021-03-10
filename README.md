@@ -116,9 +116,15 @@ And, accordingly, in the ViewModel class define functions which receive results:
 
 <br/>
 
-## Docunebtation ##
+## Additionally ##
 
-```@OnAllowed(val requestCode: Int)```
+```kotlin
+Permission 
+```
+class contains two fields:
+
+
+
 
 
 
