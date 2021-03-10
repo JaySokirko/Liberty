@@ -118,9 +118,9 @@ And, accordingly, in the ViewModel class define functions which receive results:
 
 ## Additionally ##
 
-```Permission``` class contains two fields:
-```val name: String``` contains requested permission name
-```val result: RequestResult``` contains request result
+```Permission``` class contains two fields:<br/>
+```val name: String``` contains requested permission name<br/>
+```val result: RequestResult``` contains request result<br/>
 <br/>
 
 ```RequestResult``` this is an enum that has 3 fields for permission state:
