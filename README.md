@@ -120,15 +120,9 @@ And, accordingly, in the ViewModel class define functions which receive results:
 
 ```Permission``` class contains two fields:<br/>
 ```val name: String``` contains requested permission name<br/>
-```val result: RequestResult``` contains request result<br/>
+```val result: RequestResult``` contains permission request result state. Can be one of the: ```ALLOWED, DENIED, NEVER_ASK_AGAIN```
 <br/>
 
-```RequestResult``` this is an enum that has 3 fields for permission state:
-```kotlin
- ALLOWED,
- DENIED,
- NEVER_ASK_AGAIN
-```
 
 
 
