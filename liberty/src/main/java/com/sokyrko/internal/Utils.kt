@@ -1,3 +1,3 @@
 package com.sokyrko.internal
 
-const val TAG: String = "LIBERTY ERROR"
+internal const val TAG: String = "LIBERTY ERROR"

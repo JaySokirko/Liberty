@@ -11,7 +11,6 @@ import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.sokyrko.internal.AnnotationProcessor.getMethodsAnnotatedWith
-import com.sokyrko.liberty.Liberty
 import com.sokyrko.liberty.Liberty.Permission
 import com.sokyrko.liberty.Liberty.RequestResult
 import com.sokyrko.liberty.annotation.OnAllowed

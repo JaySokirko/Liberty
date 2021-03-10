@@ -1,11 +1,9 @@
 package com.jay.test
 
 import android.Manifest.permission.*
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Liberty.init(this)
 
         requestReadContactsBtn = findViewById(R.id.single_permission_request_btn)
         readContactsResultTextView = findViewById(R.id.single_permission_request_text_view)
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     @OnNeverAskAgain(REQUEST_READ_CONTACTS)
     fun onContactsRequestNeverAskAgain() {
-        readContactsResultTextView.text = "Result: Never ask again"
+        readContactsResultTextView.text = "Result: Don't ask again"
         readContactsResultTextView.setTextColor(Color.RED)
     }
 
@@ -124,15 +124,15 @@ class MainActivity : AppCompatActivity() {
                 RequestResult.NEVER_ASK_AGAIN -> {
                     when(permission.name) {
                         CAMERA -> {
-                            cameraResultTextView.text = "Camera: Never ask again"
+                            cameraResultTextView.text = "Camera: Don't ask again"
                             cameraResultTextView.setTextColor(Color.RED)
                         }
                         READ_EXTERNAL_STORAGE -> {
-                            storageResultTextView.text = "Storage: Never ask again"
+                            storageResultTextView.text = "Storage: Don't ask again"
                             storageResultTextView.setTextColor(Color.RED)
                         }
                         READ_SMS -> {
-                            smsResultTextView.text = "SMS: Never ask again"
+                            smsResultTextView.text = "SMS: Don't ask again"
                             smsResultTextView.setTextColor(Color.RED)
                         }
                     }
