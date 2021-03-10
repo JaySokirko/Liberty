@@ -96,7 +96,7 @@ fun onContactsAndCamera(result: MutableList<Permission>) {
 ```
 
 The function name doesn't matter but should receives
-only one argument with type MutableList<Permission>
+only one argument with type ```kotlin MutableList<Permission>```
 
 <br/>
 
