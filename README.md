@@ -1,5 +1,6 @@
 # Liberty
 This library helps to manage runtime permissions handling. 
+<br/>
 ![](record_1.gif)
 <br/>
 
