@@ -1,12 +1,11 @@
 # Liberty
 This library helps to manage runtime permissions handling. 
-
+<br/>
+![](record_1.gif)
 <br/>
 
 ## Basic concepts ##
    
-![](record_1.gif)
-
 Firstly, initialize the library. You can do this in your activity or fragment:
 ```kotlin
 Liberty.init(activity = this)
@@ -48,7 +47,7 @@ And in the final step, you should define functions that will handle results:
     
     @OnNeverAskAgain(YOUR_REQUEST_CODE)
     fun onContactsNeverAskAgain() {
-        //The user has clicked "don't ask again"
+        //Clicked "don't ask again"
     }
 ```
 Functions names do not matter, but they should be without any arguments.
