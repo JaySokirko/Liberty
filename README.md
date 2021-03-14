@@ -35,7 +35,7 @@ In the next step, override onRequestPermissionsResult:
 ```
 Where the ```receiver = this``` is the object which will receive the result of the permission request.<br/> 
 In this case, it is an instance of your activity or fragment,<br/>
-but it could also be any other object. This will be described below.
+but it could also be any other object. [This will be described below.](#custom_receivers)
  
 <br/>
 
@@ -107,6 +107,7 @@ only one argument with the type [```MutableList<Permission>```](#Additionally)
 
 <br/>
 
+<a id="custom_receivers"></a>
 ## Custom receivers ## 
 Let's assume you want to receive permissions request results in your ViewModel class.
 To do this you just need to pass your ViewModel class instance as the receiver in onRequestPermissionsResult():
