@@ -53,7 +53,7 @@ And in the final step, define functions that will handle results:
     
     @OnNeverAskAgain(YOUR_REQUEST_CODE)
     fun onContactsNeverAskAgain() {
-        //Clicked "don't ask again"
+        //Clicked "Don't ask again"
     }
 ```
 Functions names do not matter, but they should be without any arguments.
@@ -75,7 +75,8 @@ class MainActivity : Activity() {
 }
 ```
 In case, if your activity extends AppCompatActivity() or you've initialized 
-Liberty in your fragment, you can don't care about clearing resources, cuz the library handles this automatically.
+Liberty in your fragment, you can don't care about clearing resources,<br/>
+cuz the library handles this automatically.
 
 <br/>
 
@@ -96,7 +97,7 @@ Liberty.requestPermissions(
 And you need to define a function which will receive a result:
 ```kotlin
 @OnPermissionsRequestResult(YOUR_REQUEST_CODE)
-fun onContactsAndCamera(result: MutableList<Permission>) {
+fun onPermissionsRequestResult(result: MutableList<Permission>) {
   //Handle permissions request result
 }
 ```
