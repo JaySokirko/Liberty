@@ -4,7 +4,7 @@ This library helps to manage runtime permissions handling.
 ![](record_1.gif)
 <br/>
 
-## Dependency ## [![](https://jitpack.io/v/JaySokirko/Liberty.svg)](https://jitpack.io/#JaySokirko/Liberty)
+## Dependency [![](https://jitpack.io/v/JaySokirko/Liberty.svg)](https://jitpack.io/#JaySokirko/Liberty)
 Include the library in your ```build.gradle```
 ```
 dependencies{
