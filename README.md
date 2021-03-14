@@ -120,6 +120,8 @@ And, accordingly, in the ViewModel class define functions which receive results:
     fun onPermissionAllowed() {
         //Permission allowed
     }
+    
+    //Other functions to receive results...
 ```
 
 <br/>
