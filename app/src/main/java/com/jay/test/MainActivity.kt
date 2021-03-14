@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.sokyrko.liberty.Liberty
 import com.sokyrko.liberty.Liberty.Permission
 import com.sokyrko.liberty.Liberty.RequestResult
-import com.sokyrko.liberty.Liberty
 import com.sokyrko.liberty.annotation.OnAllowed
 import com.sokyrko.liberty.annotation.OnDenied
 import com.sokyrko.liberty.annotation.OnNeverAskAgain
@@ -38,7 +38,9 @@ class MainActivity : AppCompatActivity() {
         smsResultTextView = findViewById(R.id.read_sms_result_text_view)
 
         requestReadContactsBtn.setOnClickListener {
-            Liberty.requestPermission(permission = READ_CONTACTS, requestCode =  REQUEST_READ_CONTACTS)
+            Liberty.requestPermission(
+                permission = READ_CONTACTS,
+                requestCode = REQUEST_READ_CONTACTS)
         }
 
         requestScopePermissionsBtn.setOnClickListener {
@@ -82,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @OnPermissionsRequestResult(REQUEST_SCOPE_PERMISSIONS)
-    fun onContactsAndCamera(result: MutableList<Permission>) {
+    fun onPermissionsRequestResult(result: MutableList<Permission>) {
         result.forEach { permission: Permission ->
 
             when(permission.result) {

@@ -21,8 +21,7 @@ internal object AnnotationProcessor {
         return methods
     }
 
-    fun invokeMethod(method: Method?, receiver: Any) {
-        method ?: return
+    fun invokeMethod(method: Method, receiver: Any) {
         try {
             method.invoke(receiver)
         } catch (e: Exception) {
@@ -34,8 +33,7 @@ internal object AnnotationProcessor {
         }
     }
 
-    fun invokeMethod(method: Method?, receiver: Any, argument: Any) {
-        method ?: return
+    fun invokeMethod(method: Method, receiver: Any, argument: Any) {
         try {
             method.invoke(receiver, argument)
         } catch (e: Exception) {

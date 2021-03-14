@@ -8,9 +8,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ComponentActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.sokyrko.internal.AnnotationProcessor.getMethodsAnnotatedWith
 import com.sokyrko.liberty.Liberty.Permission
 import com.sokyrko.liberty.Liberty.RequestResult
 import com.sokyrko.liberty.annotation.OnAllowed
@@ -50,32 +48,6 @@ internal object Core {
         fragment.lifecycle.addObserver(lifecycleObserver)
     }
 
-    fun isHavePermission(permission: String): Boolean {
-        return when(context) {
-            is Activity -> {
-                val check: Int = ContextCompat.checkSelfPermission((context as Activity), permission)
-                check == PERMISSION_GRANTED
-            }
-            is Fragment -> {
-                val check: Int = ContextCompat.checkSelfPermission(((context as Fragment).requireContext()), permission)
-                check == PERMISSION_GRANTED
-            }
-            else -> {
-                throw IllegalArgumentException("context does not activity or fragment")
-            }
-        }
-    }
-
-    fun isHavePermissions(vararg permissions: String): List<Permission> {
-        val resultList: MutableList<Permission> = mutableListOf()
-
-//        permissions.forEach { permission ->
-//            resultList.add(Permission(name = permission, isGranted = isHavePermission(permission)))
-//        }
-
-        return resultList
-    }
-
     fun requestPermission(permission: String, requestCode: Int) {
         when(context) {
             is Activity -> {
@@ -108,28 +80,17 @@ internal object Core {
             if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
 
                 if (shouldShowRequestPermissionRationale(context!!, permission = permissions[0])) {
-                    val onDenied: Method? =
-                        getMethodsAnnotatedWith(receiver, OnDenied::class.java).firstOrNull {
-                            it.getAnnotation(OnDenied::class.java)?.requestCode == requestCode
-                        }
-                    AnnotationProcessor.invokeMethod(onDenied, receiver)
+                   onDenied(receiver, requestCode)
                 }
                 else {
-                    val onNeverAskAgain: Method? =
-                        getMethodsAnnotatedWith(receiver, OnNeverAskAgain::class.java).firstOrNull {
-                            it.getAnnotation(OnNeverAskAgain::class.java)?.requestCode == requestCode
-                        }
-                    AnnotationProcessor.invokeMethod(onNeverAskAgain, receiver)
+                    onNeverAskAgain(receiver, requestCode)
                 }
             }
 
             else if (grantResults[0] == PERMISSION_GRANTED) {
-                val onAllowed: Method? =
-                    getMethodsAnnotatedWith(receiver, OnAllowed::class.java).firstOrNull {
-                        it.getAnnotation(OnAllowed::class.java)?.requestCode == requestCode
-                    }
-                AnnotationProcessor.invokeMethod(onAllowed, receiver)
+                onAllowed(receiver, requestCode)
             }
+
         } else {
             val permissionsResultList: MutableList<Permission> = mutableListOf()
 
@@ -149,11 +110,12 @@ internal object Core {
             }
 
             val method: Method? =
-                getMethodsAnnotatedWith(receiver, OnPermissionsRequestResult::class.java).firstOrNull {
+                AnnotationProcessor.getMethodsAnnotatedWith(receiver, OnPermissionsRequestResult::class.java)
+                    .firstOrNull {
                     it.getAnnotation(OnPermissionsRequestResult::class.java)?.requestCode == requestCode
                 }
 
-            AnnotationProcessor.invokeMethod(method, receiver, permissionsResultList)
+            if (method != null) AnnotationProcessor.invokeMethod(method, receiver, permissionsResultList)
         }
     }
 
@@ -165,5 +127,35 @@ internal object Core {
         if (context is Activity) return context.shouldShowRequestPermissionRationale(permission)
         if (context is Fragment) return context.shouldShowRequestPermissionRationale(permission)
         else throw IllegalArgumentException("context does not activity or fragment")
+    }
+
+    private fun onAllowed(receiver: Any, requestCode: Int) {
+        val onAllowed: Method? =
+            AnnotationProcessor.getMethodsAnnotatedWith(receiver, OnAllowed::class.java)
+                .firstOrNull {
+                    it.getAnnotation(OnAllowed::class.java)?.requestCode == requestCode
+                }
+
+        if (onAllowed != null) AnnotationProcessor.invokeMethod(onAllowed, receiver)
+    }
+
+    private fun onDenied(receiver: Any, requestCode: Int) {
+        val onDenied: Method? =
+            AnnotationProcessor.getMethodsAnnotatedWith(receiver, OnDenied::class.java)
+                .firstOrNull {
+                    it.getAnnotation(OnDenied::class.java)?.requestCode == requestCode
+                }
+
+        if (onDenied != null) AnnotationProcessor.invokeMethod(onDenied, receiver)
+    }
+
+    private fun onNeverAskAgain(receiver: Any, requestCode: Int) {
+        val onNeverAskAgain: Method? =
+            AnnotationProcessor.getMethodsAnnotatedWith(receiver, OnNeverAskAgain::class.java)
+                .firstOrNull {
+                    it.getAnnotation(OnNeverAskAgain::class.java)?.requestCode == requestCode
+                }
+
+        if (onNeverAskAgain != null) AnnotationProcessor.invokeMethod(onNeverAskAgain, receiver)
     }
 }

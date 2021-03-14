@@ -15,14 +15,6 @@ object Liberty {
         Core.init(fragment)
     }
 
-    fun isHavePermission(permission: String, result: (Boolean) -> Unit) {
-        result(Core.isHavePermission(permission))
-    }
-
-    fun isHavePermissions(vararg permissions: String, result: (List<Permission>) -> Unit) {
-        result(Core.isHavePermissions(*permissions))
-    }
-
     fun requestPermission(permission: String, requestCode: Int) {
         Core.requestPermission(permission, requestCode)
     }
