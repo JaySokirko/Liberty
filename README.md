@@ -33,7 +33,7 @@ In the next step, override onRequestPermissionsResult:
         Liberty.onRequestPermissionsResult(receiver = this, requestCode, permissions, grantResults)
     }
 ```
-Where the ```receiver = this``` is the object which will receive the result of the permission request. 
+Where the ```receiver = this``` is the object which will receive the result of the permission request.<br/> 
 In this case, it is an instance of your activity or fragment,<br/>
 but it could also be any other object. This will be described below.
  
