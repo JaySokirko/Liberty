@@ -4,36 +4,42 @@ This library helps to manage runtime permissions handling.
 ![](record_1.gif)
 <br/>
 
-## Basic concepts ##
+## Overview ##
    
-Firstly, initialize the library. You can do this in your activity or fragment:
+Firstly, initialize the library, in your activity or fragment:
 ```kotlin
 Liberty.init(activity = this)
 Liberty.init(fragment = this)
  ```
 <br/>
 
-Call this code to request permission, for instance, android.Manifest.permission.READ_CONTACTS
+To request permission, for instance, android.Manifest.permission.READ_CONTACTS
 ```kotlin
-Liberty.requestPermission(permission = android.Manifest.permission.READ_CONTACTS, requestCode = YOUR_REQUEST_CODE)
+ Liberty.requestPermission(
+                permission = android.Manifest.permission.READ_CONTACTS,
+                requestCode = YOUR_REQUEST_CODE)
 ```
 
 <br/>
 
-In the next step, you need to override onRequestPermissionsResult:
+In the next step, override onRequestPermissionsResult:
 ```kotlin
-   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
         Liberty.onRequestPermissionsResult(receiver = this, requestCode, permissions, grantResults)
     }
 ```
-Where the receiver is the object which will receive the result of the permission request. 
-In the current case, it is an instance of your activity or fragment.
-
+Where the ```receiver = this``` is the object which will receive the result of the permission request. 
+In this case, it is an instance of your activity or fragment,<br/>
+but it could also be any other object. This will be described below.
+ 
 <br/>
 
-And in the final step, you should define functions that will handle results:
+And in the final step, define functions that will handle results:
 ```kotlin
     @OnAllowed(YOUR_REQUEST_CODE)
     fun onContactsAllowed() {
@@ -52,7 +58,7 @@ And in the final step, you should define functions that will handle results:
 ```
 Functions names do not matter, but they should be without any arguments.
 After permission request, the library will trigger a certain method, depends on the result.
-For instance, if the user has allowed the requested permission, function annotated @OnAllowed will be called.
+For instance, if requested permission is allowed, the function annotated @OnAllowed will be called.
 
 <br/>
 
