@@ -130,8 +130,8 @@ And, accordingly, in the ViewModel class define functions which receive results:
 ## Additionally ##
 
 ```Permission``` class contains two fields:<br/>
-```val name: String``` contains requested permission name<br/>
-```val result: RequestResult``` contains permission request result state. Can be one of the: ```ALLOWED, DENIED, NEVER_ASK_AGAIN```
+```val name: String``` requested permission name<br/>
+```val result: RequestResult``` permission request result state. Can be one of the: ```ALLOWED, DENIED, NEVER_ASK_AGAIN```
 <br/>
 
 
