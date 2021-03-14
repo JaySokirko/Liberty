@@ -6,7 +6,7 @@ This library helps to manage runtime permissions handling.
 
 ## Overview ##
    
-Firstly, initialize the library, in your activity or fragment:
+Firstly, initialize the library in your activity or fragment:
 ```kotlin
 Liberty.init(activity = this)
 Liberty.init(fragment = this)
