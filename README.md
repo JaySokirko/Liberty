@@ -7,7 +7,11 @@ This library helps to manage runtime permissions handling.
 ## Dependency [![](https://jitpack.io/v/JaySokirko/Liberty.svg)](https://jitpack.io/#JaySokirko/Liberty)
 Include the library in your ```build.gradle```
 ```
-dependencies{
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
     implementation 'com.github.JaySokirko:Liberty:1.2.1'
 }
 ```
