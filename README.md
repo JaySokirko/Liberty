@@ -4,6 +4,15 @@ This library helps to manage runtime permissions handling.
 ![](record_1.gif)
 <br/>
 
+## Dependency ##
+Include the library in your build.gradle
+```
+dependencies{
+    implementation 'com.github.JaySokirko:Liberty:1.2.1'
+}
+```
+
+
 ## Overview ##
    
 Firstly, initialize the library in your activity or fragment:
