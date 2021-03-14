@@ -5,7 +5,7 @@ This library helps to manage runtime permissions handling.
 <br/>
 
 ## Dependency ##
-Include the library in your build.gradle
+Include the library in your ```build.gradle```
 ```
 dependencies{
     implementation 'com.github.JaySokirko:Liberty:1.2.1'
