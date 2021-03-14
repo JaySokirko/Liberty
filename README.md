@@ -103,7 +103,7 @@ fun onPermissionsRequestResult(result: MutableList<Permission>) {
 ```
 
 The function name doesn't matter but should receive<br/>
-only one argument with the type ```MutableList<Permission>```
+only one argument with the type [```MutableList<Permission>```](#Additionally)
 
 <br/>
 
@@ -123,6 +123,7 @@ And, accordingly, in the ViewModel class define functions which receive results:
 
 <br/>
 
+<a id="Additionally"></a>
 ## Additionally ##
 
 ```Permission``` class contains two fields:<br/>
