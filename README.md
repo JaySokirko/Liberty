@@ -102,8 +102,8 @@ fun onPermissionsRequestResult(result: MutableList<Permission>) {
 }
 ```
 
-The function name doesn't matter but should receives
-only one argument with type ```MutableList<Permission>```
+The function name doesn't matter but should receive<br/>
+only one argument with the type ```MutableList<Permission>```
 
 <br/>
 
